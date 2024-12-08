@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitap Arama</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="main-content">
+        <div class="top-actions">
+            <button class="action-btn alarm-btn" onclick="showPriceAlertModal()">
+                <i class="fas fa-bell"></i>
+                <span>Fiyat Alarmlarım</span>
+                <span class="notification-badge">2</span>
+            </button>
+        </div>
+
+        <div class="price-chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+    </div>
+
+    <div class="side-alert-form">
+        <h3>Fiyat Alarmı Kur</h3>
+        <div class="alert-inputs">
+            <input type="number" id="alertPrice" placeholder="Hedef fiyat">
+            <button onclick="setPriceAlert()" class="set-alert-btn">
+                <i class="fas fa-bell"></i> Alarm Kur
+            </button>
+        </div>
+    </div>
+
+    <style>
+    .main-content {
+        padding-top: 150px; 
+    }
+
+    .top-actions {
+        position: fixed;
+        top: 150px; 
+        right: 20px;
+        z-index: 1000;
+    }
+
+    .side-alert-form {
+        position: fixed;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: white;
+        padding: 20px;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        border-radius: 8px 0 0 8px;
+        z-index: 1000;
+    }
+
+    .alert-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .alert-inputs input {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .set-alert-btn {
+        padding: 8px 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .set-alert-btn:hover {
+        background-color: #45a049;
+    }
+    </style>
+
+    <div class="filters-container">
+        <div class="filter-group">
+            <select id="categoryFilter" class="filter-select">
+                <option value="">Tüm Kategoriler</option>
+                <option value="tyt-matematik">TYT Matematik</option>
+                <option value="ayt-fizik">AYT Fizik</option>
+                <option value="tyt-turkce">TYT Türkçe</option>
+                <option value="ayt-kimya">AYT Kimya</option>
+            </select>
+            <select id="publisherFilter" class="filter-select">
+                <option value="">Tüm Yayınevleri</option>
+                <option value="acil">Acil Yayınları</option>
+                <option value="3d">3D Yayınları</option>
+                <option value="345">345 Yayınları</option>
+            </select>
+            <select id="priceSort" class="filter-select">
+                <option value="">Sıralama</option>
+                <option value="low">Fiyat: Düşükten Yükseğe</option>
+                <option value="high">Fiyat: Yüksekten Düşüğe</option>
+            </select>
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Kitap adı yazın...">
+            <button onclick="searchBooks()" class="search-button">Ara</button>
+        </div>
+    </div>
+
+    <div id="results" class="results-container">
+    </div>
+
+    <div class="similar-books-container">
+        <h2 class="section-title">Benzer Kitaplar</h2>
+        <div class="similar-books-slider">
+            <button class="slider-btn prev-btn" onclick="slidePrev()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div id="similarBooks" class="similar-books">
+            </div>
+            <button class="slider-btn next-btn" onclick="slideNext()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="priceAlertModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Fiyat Alarmı Kur</h2>
+            <div class="alert-form">
+                <input type="number" id="alertPrice" placeholder="Hedef fiyat">
+                <button onclick="setPriceAlert()">Alarm Kur</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="bookDetailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="bookDetailContent"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+    const ctx = document.getElementById('priceChart').getContext('2d');
+    const priceChart = new Chart(ctx, {
+    });
+
+    function setPriceAlert() {
+        const price = document.getElementById('alertPrice').value;
+        if (price) {
+            alert(`${price} TL için fiyat alarmı kuruldu!`);
+            document.getElementById('alertPrice').value = ''; 
+        }
+    }
+    </script>
+</body>
+</html>
